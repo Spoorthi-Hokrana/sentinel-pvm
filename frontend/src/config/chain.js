@@ -2,7 +2,8 @@ import { defineChain as viemDefineChain } from "viem";
 import { createPublicClient, http } from "viem";
 import { defineChain } from "thirdweb/chains";
 
-const RPC_URL = "https://services.polkadothub-rpc.com/testnet";
+const RPC_URL =
+  import.meta.env.VITE_RPC_URL || "https://testnet-paseo-eth-rpc.polkadot.io";
 const EXPLORER_URL =
   "https://blockscout-passet-hub.parity-testnet.parity.io";
 
