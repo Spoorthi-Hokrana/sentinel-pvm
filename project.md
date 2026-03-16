@@ -45,5 +45,3 @@ Sentinel-PVM uses `pallet-revive` on Polkadot Hub to blend EVM composability wit
 - **Task 4**: Build Python AI farming agent demo script + React frontend.
 - **Task 5**: Record demo — EVM failing vs PVM succeeding side by side.
 
-## 8. Why This Wins Track 2
-Polkadot Solidity Hackathon Track 2 — "PVM-experiments: Call Rust libraries from Solidity". This is not a toy example — it demonstrates a production-grade use case (DePIN/IoT telemetry) that is literally impossible without this architecture. Polkadot Hub is the only blockchain where a Solidity contract can directly call a Rust program on the same chain.

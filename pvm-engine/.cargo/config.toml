@@ -1,8 +1,5 @@
 [build]
-target = "riscv64emac-unknown-none-polkavm"
+target = "riscv64emac-unknown-none-polkavm.json"
 
-[target.riscv64emac-unknown-none-polkavm]
-rustflags = [
-    "-C", "link-arg=--emit-relocs",
-    "-C", "link-arg=-Tlinker.ld",
-]
+[unstable]
+build-std = ["core", "alloc"]

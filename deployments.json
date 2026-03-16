@@ -1,0 +1,20 @@
+{
+  "network": "Paseo Asset Hub (Polkadot Hub TestNet)",
+  "chainId": 420420417,
+  "rpcUrl": "https://services.polkadothub-rpc.com/testnet",
+  "deployer": "0x5013b3e1c27d2A6Fcf65A55521a653071F5Dfa7b",
+  "contracts": {
+    "pvmEngine": {
+      "address": "0xd67c20221ed1cc16416bd5be1915b2b9487fb1d0",
+      "txHash": "0x5b29b523ee9cdbae148df25bbe5ddefd122793146d237be6c36167806a4968a5",
+      "blockNumber": 6466394,
+      "description": "Rust PVM ed25519 signature verification coprocessor (v2 — 64K stack)"
+    },
+    "sentinel": {
+      "address": "0xe52439ffc5e6875e1961cf16bea1e6906673700b",
+      "txHash": "0x8994ed39b4c3307847d21f77913b99b9c49ee89c733baa9dc460f6a8250b7350",
+      "blockNumber": 6466164,
+      "description": "Solidity gateway contract for DePIN/AI telemetry verification"
+    }
+  }
+}

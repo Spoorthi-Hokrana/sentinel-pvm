@@ -1,0 +1,6 @@
+.env
+target/
+node_modules/
+out/
+cache/
+*.polkavm
