@@ -1,417 +1,190 @@
-import { useState, useEffect, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion } from 'framer-motion';
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-} from "recharts";
-import { XCircle, CheckCircle2, Zap, Box, Code2 } from "lucide-react";
-import GlowCard from "../components/GlowCard";
+    FileStack,
+    Clock,
+    ShieldCheck,
+    Zap,
+    CheckCircle,
+    X,
+    DollarSign,
+    Shield,
+    Award,
+    Turtle,
+    ArrowRight,
+} from 'lucide-react';
 
-const chartData = [
-  { sigs: "1", evm: 1100000, pvm: 11640 },
-  { sigs: "5", evm: 5500000, pvm: 58200 },
-  { sigs: "10", evm: 11000000, pvm: 116402 },
-  { sigs: "20", evm: 22000000, pvm: 232800 },
-  { sigs: "50", evm: 55000000, pvm: 582000 },
-  { sigs: "100", evm: 110000000, pvm: 1164000 },
+const ease = [0.16, 1, 0.3, 1];
+const fadeUp = (delay = 0) => ({
+    initial: { opacity: 0, y: 40 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: '-80px' },
+    transition: { duration: 0.8, ease, delay },
+});
+
+const oldWayItems = [
+    'Takes 24-48 hours',
+    'Requires manual paperwork',
+    'Records can be lost or forged',
+    'Expensive at scale',
 ];
 
-function useTypewriter(lines, speed = 40, startDelay = 0) {
-  const [displayed, setDisplayed] = useState([]);
-  const [done, setDone] = useState(false);
+const newWayItems = [
+    'Verified in under 6 seconds',
+    'Completely automatic',
+    'Permanent and tamper-proof',
+    'Works with any sensor',
+];
 
-  useEffect(() => {
-    let timeout;
-    let lineIdx = 0;
-    let charIdx = 0;
-    const buffer = [];
-
-    function tick() {
-      if (lineIdx >= lines.length) {
-        setDone(true);
-        return;
-      }
-      const line = lines[lineIdx];
-      charIdx++;
-      buffer[lineIdx] = {
-        ...line,
-        text: line.text.slice(0, charIdx),
-      };
-      setDisplayed([...buffer]);
-
-      if (charIdx >= line.text.length) {
-        lineIdx++;
-        charIdx = 0;
-        timeout = setTimeout(tick, 200);
-      } else {
-        timeout = setTimeout(tick, speed);
-      }
-    }
-
-    timeout = setTimeout(tick, startDelay);
-    return () => clearTimeout(timeout);
-  }, []);
-
-  return { displayed, done };
-}
-
-function EvmTerminal({ running }) {
-  const lines = [
-    { text: "Submitting batch of 10 ed25519 signatures...", color: "text-white/70" },
-    { text: "Target: NaiveSolidityVerifier.verify(bytes)", color: "text-white/50" },
-    { text: "Gas limit: 30,000,000", color: "text-white/50" },
-    { text: "Processing...", color: "text-yellow-400" },
-    { text: "", color: "" },
-    { text: "TRANSACTION REVERTED", color: "text-red-400 font-bold" },
-    { text: "Error: OutOfGas — exceeded block gas limit", color: "text-red-400" },
-    { text: "Signatures verified: 0/10", color: "text-red-300" },
-    { text: "Status: FAILED", color: "text-red-500 font-bold" },
-  ];
-  const { displayed, done } = useTypewriter(lines, 30, running ? 300 : 99999);
-
-  return (
-    <div className="bg-black/80 rounded-xl border border-red-500/20 overflow-hidden">
-      <div className="flex items-center gap-2 px-4 py-2 border-b border-red-500/10 bg-red-500/5">
-        <div className="w-2 h-2 rounded-full bg-red-500" />
-        <span className="font-mono text-[10px] text-red-400/60">evm-verifier</span>
-      </div>
-      <div className="p-4 font-mono text-xs leading-relaxed min-h-[200px]">
-        {displayed.map((l, i) => (
-          <div key={i} className={l.color || "text-white/70"}>
-            {l.text ? `> ${l.text}` : ""}
-          </div>
-        ))}
-        {!running && (
-          <span className="text-white/20">Click "Try It" to start</span>
-        )}
-        {done && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mt-3 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-center"
-          >
-            <XCircle className="w-8 h-8 text-red-400 mx-auto mb-1" />
-            <span className="text-red-400 font-bold text-sm">OUT OF GAS</span>
-          </motion.div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function PvmTerminal({ running }) {
-  const lines = [
-    { text: "Submitting batch of 10 ed25519 signatures...", color: "text-white/70" },
-    { text: "Target: Sentinel.submitTelemetry(bytes)", color: "text-white/50" },
-    { text: "Routed to: PVM Engine (Rust / RISC-V)", color: "text-sentinel-cyan" },
-    { text: "Verifying ed25519 signatures...", color: "text-yellow-400" },
-    { text: "", color: "" },
-    { text: "ALL SIGNATURES VALID", color: "text-sentinel-green font-bold" },
-    { text: "Gas used: 116,402", color: "text-sentinel-green" },
-    { text: "Signatures verified: 10/10", color: "text-sentinel-green" },
-    { text: "Status: SUCCESS", color: "text-sentinel-green font-bold" },
-  ];
-  const { displayed, done } = useTypewriter(lines, 30, running ? 300 : 99999);
-
-  return (
-    <div className="bg-black/80 rounded-xl border border-sentinel-green/20 overflow-hidden">
-      <div className="flex items-center gap-2 px-4 py-2 border-b border-sentinel-green/10 bg-sentinel-green/5">
-        <div className="w-2 h-2 rounded-full bg-sentinel-green" />
-        <span className="font-mono text-[10px] text-sentinel-green/60">pvm-engine</span>
-      </div>
-      <div className="p-4 font-mono text-xs leading-relaxed min-h-[200px]">
-        {displayed.map((l, i) => (
-          <div key={i} className={l.color || "text-white/70"}>
-            {l.text ? `> ${l.text}` : ""}
-          </div>
-        ))}
-        {!running && (
-          <span className="text-white/20">Click "Try It" to start</span>
-        )}
-        {done && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mt-3 p-3 rounded-lg bg-sentinel-green/10 border border-sentinel-green/20 text-center"
-          >
-            <CheckCircle2 className="w-8 h-8 text-sentinel-green mx-auto mb-1" />
-            <span className="text-sentinel-green font-bold text-sm">
-              10/10 VERIFIED
-            </span>
-          </motion.div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function CustomTooltip({ active, payload, label }) {
-  if (!active || !payload?.length) return null;
-  return (
-    <div className="glass p-3 text-xs font-mono !bg-sentinel-card !border-sentinel-border">
-      <p className="text-white/60 mb-1">{label} signatures</p>
-      {payload.map((p) => (
-        <p key={p.name} style={{ color: p.color }}>
-          {p.name === "evm" ? "EVM" : "PVM"}: {Number(p.value).toLocaleString()} gas
-        </p>
-      ))}
-    </div>
-  );
-}
+const benefitCards = [
+    { icon: DollarSign, heading: 'Higher Selling Price', body: 'Verified produce sells for 10-25% more. Buyers pay premium for data they can independently verify.', stat: '+25%' },
+    { icon: Shield, heading: 'Lower Insurance Costs', body: 'Insurance companies offer up to 20% better rates for farms with independent verification records.', stat: '-20%' },
+    { icon: Award, heading: 'Faster Certification', body: 'Organic and sustainability certifications are processed 3x faster with Sentinel verification history.', stat: '3x faster' },
+];
 
 export default function Benchmark() {
-  const [evmRunning, setEvmRunning] = useState(false);
-  const [pvmRunning, setPvmRunning] = useState(false);
-  const chartRef = useRef(null);
-  const chartInView = useInView(chartRef, { once: true, margin: "-100px" });
-  const [showChart, setShowChart] = useState(false);
-
-  useEffect(() => {
-    if (chartInView) setShowChart(true);
-  }, [chartInView]);
-
-  return (
-    <div className="pt-24 pb-20 px-4">
-      <div className="max-w-6xl mx-auto">
-        {/* Title */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <p className="font-mono text-xs tracking-widest text-sentinel-pink mb-3">
-            THE BENCHMARK
-          </p>
-          <h1 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl">
-            Why EVM <span className="text-red-400">Can&apos;t</span> Do This
-          </h1>
-          <p className="mt-4 text-white/40 max-w-xl mx-auto">
-            Side-by-side comparison: pure Solidity ed25519 vs Rust on PolkaVM.
-            Same signatures, vastly different results.
-          </p>
-        </motion.div>
-
-        {/* Side-by-side */}
-        <div className="grid lg:grid-cols-[1fr,auto,1fr] gap-6 items-start mb-24">
-          {/* EVM Side */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <div className="text-center mb-4">
-              <div className="flex items-center justify-center gap-2 mb-1">
-                <XCircle className="w-5 h-5 text-red-400" />
-                <span className="font-display font-bold text-lg text-red-400">
-                  Pure Solidity
-                </span>
-              </div>
-              <p className="text-xs text-white/30">No ed25519 precompile available</p>
+    return (
+        <div className="px-6 lg:px-8 py-6 pb-24 lg:pb-6 bg-cream min-h-screen">
+            {/* Header */}
+            <div className="mb-12">
+                <motion.h1 {...fadeUp()} className="text-3xl md:text-4xl font-editorial text-soil mb-2">
+                    Why Sentinel saves you money
+                </motion.h1>
+                <motion.p {...fadeUp(0.1)} className="text-base text-moss">
+                    See how Sentinel compares to traditional farm data verification.
+                </motion.p>
             </div>
-            <EvmTerminal running={evmRunning} />
-            <div className="grid grid-cols-2 gap-3 mt-4 text-center font-mono text-xs">
-              <div className="glass-sm p-3">
-                <p className="text-white/30">Gas Limit</p>
-                <p className="text-red-400 font-semibold mt-1">30,000,000</p>
-              </div>
-              <div className="glass-sm p-3">
-                <p className="text-white/30">Gas Used</p>
-                <p className="text-red-400 font-semibold mt-1">30,000,000</p>
-              </div>
-              <div className="glass-sm p-3">
-                <p className="text-white/30">Sigs Verified</p>
-                <p className="text-red-400 font-semibold mt-1">0</p>
-              </div>
-              <div className="glass-sm p-3">
-                <p className="text-white/30">Status</p>
-                <p className="text-red-400 font-bold mt-1">FAILED</p>
-              </div>
-            </div>
-            <button
-              onClick={() => {
-                setEvmRunning(false);
-                setTimeout(() => setEvmRunning(true), 50);
-              }}
-              className="mt-4 w-full py-2.5 rounded-xl border border-red-400/30 text-red-400 text-sm font-medium hover:bg-red-400/10 transition"
-            >
-              Try It
-            </button>
-          </motion.div>
 
-          {/* VS divider */}
-          <div className="hidden lg:flex flex-col items-center justify-center pt-16">
-            <span className="font-display font-bold text-4xl text-sentinel-pink">
-              VS
-            </span>
-          </div>
-          <div className="lg:hidden text-center py-2">
-            <span className="font-display font-bold text-2xl text-sentinel-pink">
-              VS
-            </span>
-          </div>
+            {/* Comparison cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                {/* Old Way */}
+                <motion.div {...fadeUp(0.1)} className="bg-white rounded-2xl border border-sage overflow-hidden">
+                    <div className="h-1 bg-warning" />
+                    <div className="p-8">
+                        <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-warning mb-6">Traditional Verification</p>
+                        <div className="w-32 h-32 bg-amber-50 rounded-full mx-auto flex items-center justify-center mb-8">
+                            <FileStack className="w-10 h-10 text-warning mr-1" />
+                            <Clock className="w-8 h-8 text-warning" />
+                        </div>
+                        <p className="text-5xl font-editorial text-soil text-center mb-2">\$4.82</p>
+                        <p className="text-sm text-moss text-center mb-6">per batch of readings</p>
+                        <div className="border-t border-sage my-6" />
+                        <div className="space-y-3">
+                            {oldWayItems.map((item) => (
+                                <div key={item} className="flex items-center gap-3">
+                                    <X className="w-4 h-4 text-danger flex-shrink-0" />
+                                    <span className="text-sm text-moss">{item}</span>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="mt-6 bg-amber-50 rounded-xl p-4">
+                            <p className="text-sm text-warning text-center">Most farms skip verification because it's too expensive.</p>
+                        </div>
+                    </div>
+                </motion.div>
 
-          {/* PVM Side */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <div className="text-center mb-4">
-              <div className="flex items-center justify-center gap-2 mb-1">
-                <CheckCircle2 className="w-5 h-5 text-sentinel-green" />
-                <span className="font-display font-bold text-lg text-sentinel-green">
-                  Sentinel-PVM
-                </span>
-              </div>
-              <p className="text-xs text-white/30">Native Rust ed25519-dalek on RISC-V</p>
+                {/* New Way */}
+                <motion.div {...fadeUp(0.2)} className="bg-white rounded-2xl border border-sage overflow-hidden relative">
+                    <div className="h-1 bg-sentinel-500" />
+                    <span className="absolute top-4 right-4 bg-sentinel-500 text-white text-[9px] font-mono uppercase tracking-wider px-3 py-1 rounded-full">
+                        Recommended
+                    </span>
+                    <div className="p-8">
+                        <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-sentinel-500 mb-6">Sentinel Verification</p>
+                        <div className="w-32 h-32 bg-sentinel-50 rounded-full mx-auto flex items-center justify-center mb-8 shadow-[0_0_40px_rgba(29,191,96,0.15)]">
+                            <ShieldCheck className="w-10 h-10 text-sentinel-500 mr-1" />
+                            <Zap className="w-8 h-8 text-sentinel-500" />
+                        </div>
+                        <p className="text-5xl font-editorial text-sentinel-600 text-center mb-2">\$0.004</p>
+                        <p className="text-sm text-moss text-center mb-2">per batch of readings</p>
+                        <span className="block mx-auto w-fit bg-sentinel-50 text-sentinel-600 text-xs font-semibold px-3 py-1 rounded-full border border-sentinel-200 mb-6">
+                            99% cheaper
+                        </span>
+                        <div className="border-t border-sage my-6" />
+                        <div className="space-y-3">
+                            {newWayItems.map((item) => (
+                                <div key={item} className="flex items-center gap-3">
+                                    <CheckCircle className="w-4 h-4 text-sentinel-500 flex-shrink-0" />
+                                    <span className="text-sm text-bark">{item}</span>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="mt-6 bg-sentinel-50 rounded-xl p-4">
+                            <p className="text-sm text-sentinel-600 text-center font-medium">Verify everything. Pay almost nothing.</p>
+                        </div>
+                    </div>
+                </motion.div>
             </div>
-            <PvmTerminal running={pvmRunning} />
-            <div className="grid grid-cols-2 gap-3 mt-4 text-center font-mono text-xs">
-              <div className="glass-sm p-3">
-                <p className="text-white/30">Gas Used</p>
-                <p className="text-sentinel-green font-semibold mt-1">116,402</p>
-              </div>
-              <div className="glass-sm p-3">
-                <p className="text-white/30">Sigs Verified</p>
-                <p className="text-sentinel-green font-semibold mt-1">10</p>
-              </div>
-              <div className="glass-sm p-3">
-                <p className="text-white/30">Time</p>
-                <p className="text-sentinel-green font-semibold mt-1">~2s</p>
-              </div>
-              <div className="glass-sm p-3">
-                <p className="text-white/30">Status</p>
-                <p className="text-sentinel-green font-bold mt-1">SUCCESS</p>
-              </div>
+
+            {/* Speed comparison */}
+            <motion.div {...fadeUp()} className="bg-white rounded-2xl border border-sage p-8 mb-16">
+                <h3 className="text-xl font-editorial text-soil mb-8">Speed Comparison</h3>
+                <div className="space-y-6">
+                    <div>
+                        <div className="flex items-center gap-3 mb-2">
+                            <Turtle className="w-5 h-5 text-warning" />
+                            <span className="text-sm text-moss">Traditional: 24-48 hours</span>
+                        </div>
+                        <motion.div
+                            className="h-14 bg-amber-100 rounded-xl overflow-hidden"
+                            initial={{ width: 0 }}
+                            whileInView={{ width: '90%' }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 1.5, ease }}
+                        >
+                            <div className="h-full bg-warning/60 rounded-xl flex items-center px-4">
+                                <span className="text-xs font-mono text-amber-800">24-48 hours</span>
+                            </div>
+                        </motion.div>
+                    </div>
+                    <div>
+                        <div className="flex items-center gap-3 mb-2">
+                            <Zap className="w-5 h-5 text-sentinel-500" />
+                            <span className="text-sm text-moss">Sentinel: 6 seconds</span>
+                        </div>
+                        <motion.div
+                            className="h-14 bg-sentinel-100 rounded-xl overflow-hidden"
+                            initial={{ width: 0 }}
+                            whileInView={{ width: '3%' }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 1.5, ease, delay: 0.3 }}
+                            style={{ minWidth: '120px' }}
+                        >
+                            <div className="h-full bg-sentinel-500/60 rounded-xl flex items-center px-4">
+                                <span className="text-xs font-mono text-sentinel-800">6 sec</span>
+                            </div>
+                        </motion.div>
+                    </div>
+                </div>
+            </motion.div>
+
+            {/* Benefit cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+                {benefitCards.map((card, i) => (
+                    <motion.div
+                        key={card.heading}
+                        {...fadeUp(i * 0.15)}
+                        className="bg-white rounded-2xl border border-sage p-8 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                    >
+                        <div className="w-14 h-14 bg-sentinel-50 rounded-2xl flex items-center justify-center mb-6">
+                            <card.icon className="w-7 h-7 text-sentinel-500" />
+                        </div>
+                        <h3 className="text-xl font-editorial text-soil mb-3">{card.heading}</h3>
+                        <p className="text-sm text-moss leading-relaxed mb-4">{card.body}</p>
+                        <p className="text-3xl font-editorial text-sentinel-500">{card.stat}</p>
+                    </motion.div>
+                ))}
             </div>
-            <button
-              onClick={() => {
-                setPvmRunning(false);
-                setTimeout(() => setPvmRunning(true), 50);
-              }}
-              className="mt-4 w-full py-2.5 rounded-xl border border-sentinel-green/30 text-sentinel-green text-sm font-medium hover:bg-sentinel-green/10 transition"
-            >
-              Try It
-            </button>
-          </motion.div>
+
+            {/* Bottom CTA */}
+            <motion.div {...fadeUp()} className="text-center py-16">
+                <h2 className="text-2xl md:text-3xl font-editorial text-soil mb-6">
+                    Ready to save on verification?
+                </h2>
+                <button className="inline-flex items-center gap-2 px-10 py-5 bg-sentinel-500 text-white font-semibold uppercase tracking-wide rounded-full hover:scale-105 hover:bg-sentinel-600 transition-all duration-500 text-sm mb-4">
+                    Start Free Trial <ArrowRight className="w-4 h-4" />
+                </button>
+                <p className="text-xs text-moss">No credit card · No setup · No new hardware</p>
+            </motion.div>
         </div>
-
-        {/* Chart */}
-        <div ref={chartRef}>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={showChart ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
-            className="mb-16"
-          >
-            <h2 className="font-display font-bold text-2xl text-center mb-2">
-              Gas Consumption: EVM vs PVM
-            </h2>
-            <p className="text-center text-white/40 text-sm mb-8">
-              EVM costs scale linearly and hit the block limit at ~27 signatures.
-              PVM stays flat.
-            </p>
-            <div className="glass p-6">
-              <ResponsiveContainer width="100%" height={400}>
-                <BarChart
-                  data={chartData}
-                  margin={{ top: 10, right: 30, left: 20, bottom: 5 }}
-                >
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    stroke="rgba(255,255,255,0.05)"
-                  />
-                  <XAxis
-                    dataKey="sigs"
-                    label={{
-                      value: "Signatures",
-                      position: "insideBottom",
-                      offset: -5,
-                      fill: "rgba(255,255,255,0.3)",
-                      fontSize: 12,
-                    }}
-                    tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 12 }}
-                    axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
-                  />
-                  <YAxis
-                    tickFormatter={(v) =>
-                      v >= 1e6 ? `${(v / 1e6).toFixed(0)}M` : v.toLocaleString()
-                    }
-                    tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
-                    axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
-                    label={{
-                      value: "Gas",
-                      angle: -90,
-                      position: "insideLeft",
-                      fill: "rgba(255,255,255,0.3)",
-                      fontSize: 12,
-                    }}
-                  />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="evm" name="evm" radius={[4, 4, 0, 0]}>
-                    {chartData.map((_, i) => (
-                      <Cell key={i} fill="#ef4444" fillOpacity={0.7} />
-                    ))}
-                  </Bar>
-                  <Bar dataKey="pvm" name="pvm" radius={[4, 4, 0, 0]}>
-                    {chartData.map((_, i) => (
-                      <Cell key={i} fill="#00FF94" fillOpacity={0.8} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-              <div className="flex justify-center gap-6 mt-4 text-xs">
-                <span className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-sm bg-red-500/70" />
-                  <span className="text-white/50">EVM (Estimated)</span>
-                </span>
-                <span className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-sm bg-sentinel-green/80" />
-                  <span className="text-white/50">PVM (Measured)</span>
-                </span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Impact Cards */}
-        <div className="grid md:grid-cols-3 gap-6 mt-8">
-          {[
-            {
-              icon: Zap,
-              title: "95× Gas Reduction",
-              desc: "PVM verifies ed25519 signatures at a fraction of the cost, unlocking batch verification for DePIN at scale.",
-            },
-            {
-              icon: Code2,
-              title: "Full Rust Crypto Ecosystem",
-              desc: "Access any Rust cryptographic crate — ed25519, sr25519, BLS, zk-SNARKs — without EVM precompile dependencies.",
-            },
-            {
-              icon: Box,
-              title: "Cross-VM Architecture",
-              desc: "Solidity contracts call Rust coprocessors natively via pallet-revive. No bridges, no oracles, no trust assumptions.",
-            },
-          ].map((item, i) => (
-            <GlowCard key={i} glow="green">
-              <item.icon className="w-7 h-7 text-sentinel-green mb-3" />
-              <h3 className="font-display font-semibold text-base mb-2">
-                {item.title}
-              </h3>
-              <p className="text-sm text-white/40 leading-relaxed">
-                {item.desc}
-              </p>
-            </GlowCard>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+    );
 }
