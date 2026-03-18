@@ -201,43 +201,48 @@ export default function Landing() {
     return (
         <div className="bg-cream">
             {/* ═══ HERO ═══ */}
-            <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
-                <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-sentinel-500/20 rounded-full blur-[150px]" />
-                <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-sentinel-500/15 rounded-full blur-[150px]" />
-
-                <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative z-10 text-center px-6 max-w-[1200px] mx-auto">
-                    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 1 }} className="text-[10px] font-mono uppercase tracking-[0.3em] text-moss mb-8">
+            <section ref={heroRef} className="relative min-h-[90vh] flex flex-col justify-center overflow-hidden pt-12 md:pt-20">
+                <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative z-10 text-center px-6 max-w-[800px] mx-auto flex flex-col items-center">
+                    
+                    <motion.p 
+                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1], delay: 0.2 }} 
+                        className="text-[10px] md:text-[11px] font-sans font-medium uppercase tracking-[0.3em] text-moss mb-6"
+                    >
                         Trusted Farm Verification Platform
                     </motion.p>
 
-                    <div className="overflow-hidden mb-4">
-                        <motion.h1 initial={{ y: '110%' }} animate={{ y: 0 }} transition={{ duration: 1.2, ease, delay: 0.2 }} className="text-hero font-editorial text-soil leading-[0.9] tracking-tight whitespace-nowrap">
+                    <motion.div 
+                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1], delay: 0.4 }} 
+                        className="mb-8 flex flex-col items-center w-full"
+                    >
+                        <h1 className="text-[clamp(2.5rem,11vw,8rem)] font-editorial text-soil leading-[0.95] tracking-[-0.03em] whitespace-normal">
                             Every harvest
-                        </motion.h1>
-                    </div>
-                    <div className="overflow-hidden mb-8">
-                        <motion.h1 initial={{ y: '110%' }} animate={{ y: 0 }} transition={{ duration: 1.2, ease, delay: 0.4 }} className="text-hero font-editorial italic text-sentinel-500 leading-[0.9] tracking-tight whitespace-nowrap">
+                        </h1>
+                        <h1 className="text-[clamp(2.5rem,11vw,8rem)] font-editorial italic text-sentinel-500 leading-[0.95] tracking-[-0.03em] whitespace-normal -mt-1 md:-mt-4 relative z-10 mt-1 md:mt-0">
                             deserves proof.
-                        </motion.h1>
-                    </div>
+                        </h1>
+                    </motion.div>
 
-                    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2, duration: 1 }} className="text-lg text-moss max-w-[600px] mx-auto mb-10 font-body font-light leading-relaxed">
+                    <motion.p 
+                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1], delay: 0.6 }} 
+                        className="text-[14px] md:text-[15px] text-moss max-w-[460px] mx-auto mb-10 font-sans font-light leading-[1.6]"
+                    >
                         Sentinel verifies your farm sensor data automatically and creates permanent records that buyers, insurers, and certifiers trust.
                     </motion.p>
 
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5, duration: 1 }} className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <Link to="/dashboard" className="flex items-center gap-2 px-10 py-5 bg-sentinel-500 text-soil font-semibold uppercase tracking-wide rounded-full hover:scale-105 hover:bg-sentinel-600 transition-all duration-500 text-sm">
-                            Start Verifying <ArrowRight className="w-4 h-4" />
+                    <motion.div 
+                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1], delay: 0.8 }} 
+                        className="flex flex-col sm:flex-row items-center justify-center gap-3"
+                    >
+                        <Link to="/app" className="flex items-center justify-center px-7 py-3 bg-sentinel-500 text-white font-sans font-medium uppercase tracking-[0.15em] rounded-lg hover:bg-sentinel-600 transition-colors text-[12px] min-w-[160px] w-full sm:w-auto">
+                            Open App
                         </Link>
-                        <button className="flex items-center gap-2 px-10 py-5 border border-sage text-soil rounded-full hover:border-sentinel-500 transition-all duration-500 text-sm font-medium">
-                            <PlayCircle className="w-4 h-4" /> See How It Works
+                        <button 
+                            onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
+                            className="flex items-center justify-center px-7 py-3 border border-sage/60 text-moss font-sans font-medium uppercase tracking-[0.15em] rounded-lg hover:border-moss hover:text-soil transition-colors text-[12px] min-w-[160px] w-full sm:w-auto"
+                        >
+                            See How It Works
                         </button>
-                    </motion.div>
-
-                    {/* Scroll indicator */}
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2, duration: 1 }} className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3">
-                        <span className="text-[9px] font-mono uppercase tracking-[0.3em] text-moss/40">Scroll</span>
-                        <div className="w-px h-12 bg-gradient-to-b from-sentinel-500 to-transparent animate-bounce-slow" />
                     </motion.div>
                 </motion.div>
             </section>
@@ -255,8 +260,7 @@ export default function Landing() {
                         </div>
                         <div className="col-span-12 md:col-span-9">
                             <motion.p {...fadeUp(0.1)} className="text-section font-editorial text-soil leading-[1.0] tracking-tight mb-12">
-                                Farms produce thousands of sensor readings every day. But without verification, that data means nothing to buyers. Traditional certification is{' '}
-                                <em className="text-sentinel-500">slow, expensive, and easy to fake.</em>
+                                Thousands of sensor readings. Zero trust. Traditional certification can't keep up.
                             </motion.p>
                         </div>
                     </div>
@@ -266,18 +270,16 @@ export default function Landing() {
                             <motion.p {...fadeUp(0.2)} className="text-base text-moss leading-relaxed mb-8">
                                 Sentinel changes this. Every reading from your sensors gets an automatic digital seal — like a notary stamp — that proves it's authentic. It costs almost nothing, happens in seconds, and creates a permanent record.
                             </motion.p>
-                            <motion.p {...fadeUp(0.3)} className="text-section font-editorial text-soil">
-                                <span className="text-sentinel-500">99.1%</span> cheaper than traditional verification
-                            </motion.p>
+
                         </div>
                     </div>
                 </div>
             </section>
 
             {/* ═══ HOW IT WORKS ═══ */}
-            <section className="py-32 md:py-48 px-6 md:px-16 lg:px-24">
+            <section id="how-it-works" className="py-16 md:py-24 px-6 md:px-16 lg:px-24">
                 <div className="max-w-[1400px] mx-auto">
-                    <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-16 md:mb-24">
+                    <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-8 md:mb-10">
                         <div>
                             <motion.p {...fadeUp()} className="text-[10px] font-mono uppercase tracking-[0.3em] text-moss/40 mb-4">
                                 How it works
@@ -292,12 +294,12 @@ export default function Landing() {
                     </div>
 
                     {/* Decorative line */}
-                    <svg width="60" height="20" viewBox="0 0 60 20" className="mb-16 md:mb-24 text-sentinel-300">
+                    <svg width="60" height="20" viewBox="0 0 60 20" className="mb-8 md:mb-10 text-sentinel-300">
                         <path d="M2 10 C15 2, 25 18, 38 10 C45 5, 52 15, 58 10" stroke="currentColor" strokeWidth="1.5" fill="none" />
                     </svg>
 
                     {/* Step cards */}
-                    <div className="flex flex-col gap-12 md:gap-16">
+                    <div className="flex flex-col gap-6 md:gap-8">
                         {howItWorksSteps.map((step, index) => {
                             const Illustration = illustrations[index];
                             const TagRenderer = tagRenderers[step.tagType];
@@ -308,23 +310,23 @@ export default function Landing() {
                                     {...fadeUp(index * 0.15)}
                                     className="max-w-[1100px] mx-auto w-full bg-white rounded-3xl overflow-hidden shadow-[0_4px_40px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_60px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-700 ease-out border border-sage/30 group"
                                 >
-                                    <div className={`grid grid-cols-1 md:grid-cols-2 min-h-[320px] md:min-h-[360px]`}>
+                                    <div className={`grid grid-cols-1 md:grid-cols-2 min-h-[220px] md:min-h-[260px]`}>
                                         {/* Illustration */}
                                         <div className={step.imagePosition === 'right' ? 'md:order-2' : ''}>
                                             <Illustration badge={step.badge} />
                                         </div>
 
                                         {/* Text */}
-                                        <div className="p-8 md:p-10 lg:p-12 flex flex-col justify-center relative">
-                                            <div className="w-10 h-10 bg-sentinel-500 rounded-full flex items-center justify-center mb-6">
+                                        <div className="p-6 md:p-8 lg:p-10 flex flex-col justify-center relative">
+                                            <div className="w-8 h-8 bg-sentinel-500 rounded-full flex items-center justify-center mb-4">
                                                 <span className="text-white font-editorial text-sm">{step.step}</span>
                                             </div>
 
-                                            <h3 className="text-xl md:text-2xl font-editorial text-soil leading-[1.1] tracking-[-0.02em] mb-4">
+                                            <h3 className="text-xl md:text-2xl font-editorial text-soil leading-[1.1] tracking-[-0.02em] mb-3">
                                                 {step.heading}
                                             </h3>
 
-                                            <p className="text-sm md:text-[15px] font-body text-moss leading-[1.75] font-light mb-6">
+                                            <p className="text-sm rounded font-body text-moss leading-[1.5] font-light mb-4">
                                                 {step.body}
                                             </p>
 
@@ -345,29 +347,13 @@ export default function Landing() {
 
                     {/* CTA link */}
                     <motion.div {...fadeUp(0.5)} className="mt-12 md:mt-16 text-center">
-                        <Link to="/dashboard" className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.25em] text-sentinel-500 hover:text-sentinel-600 hover:gap-3 transition-all duration-500">
+                        <Link to="/app" className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.25em] text-sentinel-500 hover:text-sentinel-600 hover:gap-3 transition-all duration-500">
                             See it in action <ArrowRight className="w-3.5 h-3.5" />
                         </Link>
                     </motion.div>
                 </div>
             </section>
 
-            {/* ═══ STATS BAR ═══ */}
-            <section className="py-24 md:py-32 px-6 md:px-16 lg:px-24">
-                <div className="max-w-[1400px] mx-auto">
-                    <div ref={statsLineRef} className="line-reveal h-px bg-sentinel-500 mb-16" />
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
-                        {stats.map((stat, i) => (
-                            <motion.div key={stat.num} {...fadeUp(i * 0.1)}>
-                                <p className="text-sm font-mono text-sentinel-500 mb-2">{stat.num}</p>
-                                <p className="text-display font-editorial text-soil tracking-tight leading-none mb-2">{stat.value}</p>
-                                <p className="text-sm font-medium text-bark mb-1">{stat.label}</p>
-                                <p className="text-xs text-moss">{stat.detail}</p>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </section>
 
             {/* ═══ BENEFITS ═══ */}
             <section className="py-24 md:py-32 px-6 md:px-16 lg:px-24">
@@ -407,27 +393,25 @@ export default function Landing() {
                     </motion.p>
 
                     <div className="overflow-hidden mb-4">
-                        <motion.h2 {...fadeUp(0.1)} className="text-display font-editorial text-white leading-[0.95] tracking-tight">
+                        <motion.h2 {...fadeUp(0.1)} className="text-[clamp(2.5rem,8vw,5rem)] font-editorial text-white leading-[0.95] tracking-tight whitespace-normal">
                             Your farm data
                         </motion.h2>
                     </div>
                     <div className="overflow-hidden mb-8">
-                        <motion.h2 {...fadeUp(0.2)} className="text-display font-editorial italic text-sentinel-400 leading-[0.95] tracking-tight">
+                        <motion.h2 {...fadeUp(0.2)} className="text-[clamp(2.5rem,8vw,5rem)] font-editorial italic text-sentinel-400 leading-[0.95] tracking-tight whitespace-normal">
                             deserves better.
                         </motion.h2>
                     </div>
 
-                    <motion.p {...fadeUp(0.3)} className="text-base text-white/50 mb-10 max-w-[500px] mx-auto">
-                        Join thousands of farms already using Sentinel.
-                    </motion.p>
 
-                    <motion.div {...fadeUp(0.4)} className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <Link to="/dashboard" className="flex items-center gap-2 px-10 py-5 bg-sentinel-500 text-soil font-semibold uppercase tracking-wide rounded-full hover:scale-105 transition-all duration-500 text-sm">
-                            Get Started Free <ArrowRight className="w-4 h-4" />
+
+                    <motion.div {...fadeUp(0.4)} className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
+                        <Link to="/app" className="flex justify-center items-center gap-2 px-10 py-5 bg-sentinel-500 text-soil font-semibold uppercase tracking-wide rounded-full hover:scale-105 transition-all duration-500 text-sm w-full sm:w-auto">
+                            Open App <ArrowRight className="w-4 h-4" />
                         </Link>
-                        <button className="flex items-center gap-2 px-10 py-5 border border-white/20 text-white rounded-full hover:border-sentinel-500 transition-all duration-500 text-sm">
-                            <PlayCircle className="w-4 h-4" /> Watch Demo
-                        </button>
+                        <Link to="/technical" className="flex justify-center items-center gap-2 px-10 py-5 border border-white/20 text-white rounded-full hover:border-sentinel-500 transition-all duration-500 text-sm w-full sm:w-auto">
+                            <PlayCircle className="w-4 h-4" /> Technical Deep-Dive
+                        </Link>
                     </motion.div>
                 </div>
 

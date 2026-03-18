@@ -4,9 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
   { num: '01', label: 'Home', path: '/' },
-  { num: '02', label: 'Dashboard', path: '/dashboard' },
-  { num: '03', label: 'Performance', path: '/benchmark' },
-  { num: '04', label: 'Farm Stats', path: '/stats' },
+  { num: '02', label: 'App', path: '/app' },
+  { num: '03', label: 'Technical', path: '/technical' },
 ];
 
 export default function Navbar() {
@@ -38,11 +37,11 @@ export default function Navbar() {
             : 'py-6 bg-transparent'
           }`}
       >
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12 flex items-center justify-between">
+        <div className="max-w-[1400px] mx-auto px-8 md:px-16 lg:px-24 flex items-center justify-between">
           {/* Left */}
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-sentinel-500" />
-            <span className="text-sm uppercase tracking-wider font-medium text-soil">
+          <Link to="/" className="flex items-center gap-3">
+            <div className="w-2 h-2 rounded-full bg-sentinel-500" />
+            <span className="text-[11px] uppercase tracking-[0.2em] font-medium text-soil">
               Sentinel
             </span>
           </Link>
@@ -53,7 +52,7 @@ export default function Navbar() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sentinel-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-sentinel-500" />
             </span>
-            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-moss">
+            <span className="text-[10px] bg-transparent uppercase tracking-[0.2em] text-moss font-medium">
               Network Active
             </span>
           </div>
@@ -61,7 +60,7 @@ export default function Navbar() {
           {/* Right */}
           <button
             onClick={() => setMenuOpen(true)}
-            className="text-sm uppercase tracking-wider font-medium text-soil hover:text-sentinel-500 transition-colors duration-300"
+            className="text-[11px] uppercase tracking-[0.2em] font-medium text-soil hover:text-sentinel-500 transition-colors duration-300"
           >
             Menu
           </button>

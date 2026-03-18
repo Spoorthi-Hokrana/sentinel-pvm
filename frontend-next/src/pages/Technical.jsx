@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import {
     FileStack,
     Clock,
@@ -41,16 +42,16 @@ const benefitCards = [
     { icon: Award, heading: 'Faster Certification', body: 'Organic and sustainability certifications are processed 3x faster with Sentinel verification history.', stat: '3x faster' },
 ];
 
-export default function Benchmark() {
+export default function Technical() {
     return (
         <div className="px-6 lg:px-8 py-6 pb-24 lg:pb-6 bg-cream min-h-screen">
             {/* Header */}
             <div className="mb-12">
                 <motion.h1 {...fadeUp()} className="text-3xl md:text-4xl font-editorial text-soil mb-2">
-                    Why Sentinel saves you money
+                    Technical Deep-Dive
                 </motion.h1>
                 <motion.p {...fadeUp(0.1)} className="text-base text-moss">
-                    See how Sentinel compares to traditional farm data verification.
+                    See how Sentinel-PVM architecture radically outperforms traditional EVM data verification.
                 </motion.p>
             </div>
 
@@ -178,12 +179,12 @@ export default function Benchmark() {
             {/* Bottom CTA */}
             <motion.div {...fadeUp()} className="text-center py-16">
                 <h2 className="text-2xl md:text-3xl font-editorial text-soil mb-6">
-                    Ready to save on verification?
+                    Ready to see it in action?
                 </h2>
-                <button className="inline-flex items-center gap-2 px-10 py-5 bg-sentinel-500 text-white font-semibold uppercase tracking-wide rounded-full hover:scale-105 hover:bg-sentinel-600 transition-all duration-500 text-sm mb-4">
-                    Start Free Trial <ArrowRight className="w-4 h-4" />
-                </button>
-                <p className="text-xs text-moss">No credit card · No setup · No new hardware</p>
+                <Link to="/app" className="inline-flex items-center gap-2 px-10 py-5 bg-sentinel-500 text-white font-semibold uppercase tracking-wide rounded-full hover:scale-105 hover:bg-sentinel-600 transition-all duration-500 text-sm mb-4">
+                    Try it yourself <ArrowRight className="w-4 h-4" />
+                </Link>
+                <p className="text-xs text-moss">Run a live verification on the Paseo Testnet</p>
             </motion.div>
         </div>
     );
