@@ -3,7 +3,7 @@
 # 🌿 Sentinel-PVM
 
 **A Stateless Rust Cryptographic Coprocessor for DePIN & AI Farming**  
-*Polkadot Solidity Hackathon — Track 2: Call Rust Libraries from Solidity*
+*Polkadot Solidity Hackathon — Track 2: PVM Smart Contract (Call Rust Libraries from Solidity)*
 
 [![Live on Paseo](https://img.shields.io/badge/Live-Paseo%20Testnet-E6007A?style=for-the-badge)](#deployed-contracts)
 [![Rust + PolkaVM](https://img.shields.io/badge/Engine-Rust%20%2B%20PolkaVM-000000?style=for-the-badge&logo=rust&logoColor=white)](#pvm-engine-rust)
@@ -256,6 +256,24 @@ While PVM can theoretically handle 1,000+ signature verifications per call, the 
 
 ---
 
+## Vision & Roadmap
+
+Sentinel-PVM fundamentally proves that EVM smart contracts can scale data verification by delegating cryptography to RISC-V coprocessors. While our V1 implementation focuses on batch ed25519 verification for DePIN telemetry, our future commitment expands the core engine into a generalized ZK-lite verification layer.
+
+### Q2 2026: Generalized Cryptography Sub-Protocol
+- Implement support for `secp256r1` (P256), enabling EVM to natively verify Apple Secure Enclave & Android hardware signatures at 99% cost reduction.
+- Introduce dynamic batch sizing via binary chunking to bypass standard block weight limits on asset-heavy chains.
+
+### Q3 2026: Zero-Knowledge Range Proofs
+- Integrate the `bulletproofs` Rust crate into the PVM engine.
+- Allow sensors to prove their readings fall within a specific range (e.g. soil pH > 6.0) without revealing the exact data point to the public ledger, ensuring enterprise data privacy.
+
+### Q4 2026: SDK & Plug-and-Play Integration
+- Release `sentinel-pvm-sdk.sol` for one-line integration into existing DePIN projects.
+- Automate deployment of isolated PVM sub-engines per project via a factory contract architecture.
+
+---
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -281,6 +299,7 @@ MIT
 
 *"Every harvest deserves proof."*
 
-**Built for the Polkadot Solidity Hackathon — Track 2: PVM Experiments**
+**Built for the Polkadot Solidity Hackathon — Track 2: PVM Smart Contract**  
+*Category: Call Rust Libraries from Solidity*
 
 </div>
