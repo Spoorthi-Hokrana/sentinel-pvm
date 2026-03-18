@@ -237,6 +237,10 @@ Functions implemented:
 - Fine-tuned `hero` font size in `tailwind.config.js` for better fit across screen sizes.
 - Verified visual alignment and editorial spacing.
 
+### Task 8.2 — Vercel Deployment Fix ✅
+- Created root `vercel.json` to explicitly point deployment to the `frontend` subfolder.
+- Overrode default auto-detection of `frontend-next` to ensure the new redesign is live.
+
 ## Phase 9: Demo Recording ⬜ (not started)
 
 ---
