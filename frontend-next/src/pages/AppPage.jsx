@@ -10,6 +10,8 @@ import {
 } from 'recharts';
 
 import RunAgentPanel from '../components/RunAgentPanel';
+import TelemetryGrid from '../components/TelemetryGrid';
+import { useAgent } from '../hooks/useAgent';
 
 const weeklyData = [
     { day: 'Mon', count: 32 },
@@ -32,6 +34,8 @@ function CustomTooltip({ active, payload, label }) {
 }
 
 export default function AppPage() {
+    const { status, logs, isRunning, runAgent } = useAgent();
+
     return (
         <div className="space-y-12 pb-16">
             
@@ -56,8 +60,13 @@ export default function AppPage() {
                 </div>
 
                 <div className="mt-6">
-                    <RunAgentPanel />
+                    <RunAgentPanel status={status} logs={logs} onRun={runAgent} />
                 </div>
+            </section>
+
+            {/* ═══ SECTION 2: TELEMETRY GRID ═══ */}
+            <section>
+                <TelemetryGrid logs={logs} isRunning={isRunning} />
             </section>
 
 

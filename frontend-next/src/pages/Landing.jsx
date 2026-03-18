@@ -34,11 +34,11 @@ const fadeUp = (delay = 0) => ({
 const howItWorksSteps = [
     {
         step: '1',
-        heading: 'Your sensors collect data',
-        body: 'Soil moisture, temperature, pH levels, irrigation flow — your existing farm sensors keep doing their job. Sentinel connects to them automatically in the background.',
+        heading: 'Agent collects and signs telemetry',
+        body: 'An autonomous Python agent collects IoT sensor readings like soil moisture, temperature, pH, irrigation and then generates a fresh ed25519 keypair and signs each reading individually before submission.',
         imagePosition: 'left',
-        badge: 'No new hardware',
-        hint: 'Automatic →',
+        badge: 'ed25519 batch signing',
+        hint: 'Data generation →',
         tags: [
             { icon: Droplets, label: 'Moisture' },
             { icon: Thermometer, label: 'Temp' },
@@ -49,28 +49,28 @@ const howItWorksSteps = [
     },
     {
         step: '2',
-        heading: 'We verify and seal every reading',
-        body: "Each sensor reading gets a unique digital seal — like a notarized stamp — that proves it hasn't been changed or faked. It happens completely automatically in seconds.",
+        heading: 'PolkaVM verifies the math',
+        body: "A batch of signed readings is packed into a single binary payload and submitted to our Solidity gateway (Sentinel.sol). The gateway delegates verification to a stateless Rust coprocessor running natively on PolkaVM via a simple call().",
         imagePosition: 'right',
-        badge: 'Under 6 seconds',
-        hint: 'Sealed in seconds →',
+        badge: 'Rust on PolkaVM',
+        hint: 'Coprocessor execution →',
         tags: [
-            { icon: CheckCircle, label: 'Tamper-proof' },
-            { icon: CheckCircle, label: 'Under 6 seconds' },
+            { icon: CheckCircle, label: 'Batch Processing' },
+            { icon: CheckCircle, label: '~95K Gas Total' },
         ],
         tagType: 'checks',
     },
     {
         step: '3',
-        heading: 'Share trusted proof with anyone',
-        body: 'Buyers pay more for verified produce. Insurance companies lower premiums. Organic certifiers process faster. Anyone can verify your farm data is authentic with one click.',
+        heading: 'Immutable on-chain proof',
+        body: 'If the Rust coprocessor confirms all signatures are mathematically valid, the batch hash is permanently anchored in the EVM state. Anyone can independently query the contract to prove your raw farm data was never tampered with.',
         imagePosition: 'left',
-        badge: 'Permanent record',
-        hint: 'One-click sharing →',
+        badge: 'Permanent State Anchor',
+        hint: 'Trustless verification →',
         tags: [
             { value: '+25%', label: 'higher prices' },
             { value: '-20%', label: 'insurance' },
-            { value: '3x', label: 'faster' },
+            { value: '100%', label: 'math proof' },
         ],
         tagType: 'stats',
     },
@@ -186,7 +186,7 @@ const stats = [
 const benefits = [
     { icon: DollarSign, heading: 'Sell for more', body: 'Verified produce commands 10-25% higher prices. Buyers trust data they can check themselves.' },
     { icon: Shield, heading: 'Lower insurance', body: 'Insurance companies offer better rates for farms with independent verification records.' },
-    { icon: Award, heading: 'Certify faster', body: 'Organic and sustainability certifications process 3x faster with Sentinel verification.' },
+    { icon: Award, heading: 'Total transparency', body: 'Export immutable farm records instantly. Anyone can verify your data mathematically without third-party auditors.' },
 ];
 
 /* ═══ LANDING PAGE ═══ */
@@ -203,16 +203,16 @@ export default function Landing() {
             {/* ═══ HERO ═══ */}
             <section ref={heroRef} className="relative min-h-[90vh] flex flex-col justify-center overflow-hidden pt-12 md:pt-20">
                 <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative z-10 text-center px-6 max-w-[800px] mx-auto flex flex-col items-center">
-                    
-                    <motion.p 
-                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1], delay: 0.2 }} 
+
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1], delay: 0.2 }}
                         className="text-[10px] md:text-[11px] font-sans font-medium uppercase tracking-[0.3em] text-moss mb-6"
                     >
                         Trusted Farm Verification Platform
                     </motion.p>
 
-                    <motion.div 
-                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1], delay: 0.4 }} 
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1], delay: 0.4 }}
                         className="mb-8 flex flex-col items-center w-full"
                     >
                         <h1 className="text-[clamp(2.5rem,11vw,8rem)] font-editorial text-soil leading-[0.95] tracking-[-0.03em] whitespace-normal">
@@ -223,21 +223,21 @@ export default function Landing() {
                         </h1>
                     </motion.div>
 
-                    <motion.p 
-                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1], delay: 0.6 }} 
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1], delay: 0.6 }}
                         className="text-[14px] md:text-[15px] text-moss max-w-[460px] mx-auto mb-10 font-sans font-light leading-[1.6]"
                     >
-                        Sentinel verifies your farm sensor data automatically and creates permanent records that buyers, insurers, and certifiers trust.
+                        Sentinel verifies your farm sensor data automatically and creates permanent records that buyers and insurers trust.
                     </motion.p>
 
-                    <motion.div 
-                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1], delay: 0.8 }} 
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1], delay: 0.8 }}
                         className="flex flex-col sm:flex-row items-center justify-center gap-3"
                     >
                         <Link to="/app" className="flex items-center justify-center px-7 py-3 bg-sentinel-500 text-white font-sans font-medium uppercase tracking-[0.15em] rounded-lg hover:bg-sentinel-600 transition-colors text-[12px] min-w-[160px] w-full sm:w-auto">
                             Open App
                         </Link>
-                        <button 
+                        <button
                             onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
                             className="flex items-center justify-center px-7 py-3 border border-sage/60 text-moss font-sans font-medium uppercase tracking-[0.15em] rounded-lg hover:border-moss hover:text-soil transition-colors text-[12px] min-w-[160px] w-full sm:w-auto"
                         >
@@ -260,7 +260,7 @@ export default function Landing() {
                         </div>
                         <div className="col-span-12 md:col-span-9">
                             <motion.p {...fadeUp(0.1)} className="text-section font-editorial text-soil leading-[1.0] tracking-tight mb-12">
-                                Thousands of sensor readings. Zero trust. Traditional certification can't keep up.
+                                Thousands of sensor readings. No central authority to trust.
                             </motion.p>
                         </div>
                     </div>
@@ -268,7 +268,7 @@ export default function Landing() {
                     <div className="grid grid-cols-12 gap-6 md:gap-12 mt-8">
                         <div className="col-span-12 md:col-start-4 md:col-span-6">
                             <motion.p {...fadeUp(0.2)} className="text-base text-moss leading-relaxed mb-8">
-                                Sentinel changes this. Every reading from your sensors gets an automatic digital seal — like a notary stamp — that proves it's authentic. It costs almost nothing, happens in seconds, and creates a permanent record.
+                                Sentinel changes this. By offloading heavy ed25519 signature processing to a stateless Rust coprocessor, every single sensor reading is cryptographically verified natively on-chain. It replaces human trust with mathematical proof, at 99% lower gas costs.
                             </motion.p>
 
                         </div>

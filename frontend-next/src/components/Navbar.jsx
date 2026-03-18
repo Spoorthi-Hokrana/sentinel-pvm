@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ConnectButton, lightTheme } from 'thirdweb/react';
+import { thirdwebClient } from '../config/thirdweb';
 
 const navLinks = [
   { num: '01', label: 'Home', path: '/' },
@@ -58,12 +60,32 @@ export default function Navbar() {
           </div>
 
           {/* Right */}
-          <button
-            onClick={() => setMenuOpen(true)}
-            className="text-[11px] uppercase tracking-[0.2em] font-medium text-soil hover:text-sentinel-500 transition-colors duration-300"
-          >
-            Menu
-          </button>
+          <div className="flex items-center gap-6 lg:gap-8">
+            <ConnectButton 
+              client={thirdwebClient}
+              theme={lightTheme({
+                colors: {
+                  primaryText: '#2B332C',
+                  secondaryText: '#5A6B5C',
+                  connectedButtonBg: 'transparent',
+                  connectedButtonBgHover: 'transparent',
+                }
+              })}
+              connectButton={{
+                label: "Connect Wallet",
+                className: "!bg-transparent !text-soil !font-sans !font-medium !text-[10px] md:!text-[11px] !uppercase !tracking-[0.2em] !p-0 !min-w-0 !h-auto hover:!text-sentinel-500 transition-colors duration-300"
+              }}
+              detailsButton={{
+                className: "!bg-ivory !text-soil !font-mono !font-medium !text-[10px] md:!text-[11px] !px-3 !py-1.5 !rounded-full !border !border-sage/40 hover:!border-sentinel-300 transition-all duration-300 shadow-sm"
+              }}
+            />
+            <button
+              onClick={() => setMenuOpen(true)}
+              className="text-[11px] uppercase tracking-[0.2em] font-medium text-soil hover:text-sentinel-500 transition-colors duration-300"
+            >
+              Menu
+            </button>
+          </div>
         </div>
       </nav>
 

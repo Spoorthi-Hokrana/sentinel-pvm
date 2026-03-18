@@ -1,24 +1,7 @@
-import { useState } from 'react';
 import { Zap, Terminal, CheckCircle, AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function RunAgentPanel() {
-    const [status, setStatus] = useState('idle'); // idle, running, success, error
-    const [logs, setLogs] = useState([]);
-
-    const handleRun = () => {
-        setStatus('running');
-        setLogs(['[agent] Starting: python3 agent/agent.py', '[agent] Generating telemetry...', '[agent] Signing with ed25519...']);
-        
-        setTimeout(() => {
-            setLogs(prev => [...prev, '[agent] Submitting to Sentinel.sol...', '[agent] Transaction confirmed: 0x8994...']);
-        }, 1500);
-
-        setTimeout(() => {
-            setStatus('success');
-            setLogs(prev => [...prev, '[agent] Finished — exit code 0 in 14.2s']);
-        }, 3000);
-    };
+export default function RunAgentPanel({ status, logs, onRun }) {
 
     return (
         <div className="bg-white rounded-2xl border border-sage p-6 shadow-sm overflow-hidden">
@@ -45,7 +28,7 @@ export default function RunAgentPanel() {
                 <div>
                     {status === 'idle' || status === 'success' ? (
                         <button 
-                            onClick={handleRun}
+                            onClick={onRun}
                             className="w-full md:w-auto px-6 py-2.5 bg-sentinel-500 text-white rounded-xl text-sm font-semibold uppercase tracking-wider hover:bg-sentinel-600 transition-colors"
                         >
                             {status === 'success' ? 'Run Again' : 'Run Verification'}
