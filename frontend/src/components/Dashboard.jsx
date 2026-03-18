@@ -17,9 +17,9 @@ import {
     Tooltip,
     ResponsiveContainer,
 } from 'recharts';
-import KPICard from '../components/KPICard';
-import FieldZone from '../components/FieldZone';
-import FeedItem from '../components/FeedItem';
+import KPICard from './KPICard';
+import FieldZone from './FieldZone';
+import FeedItem from './FeedItem';
 import { useEvents } from '../hooks/useEvents';
 
 const weeklyData = [
