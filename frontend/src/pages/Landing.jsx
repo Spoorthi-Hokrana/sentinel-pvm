@@ -211,12 +211,12 @@ export default function Landing() {
                     </motion.p>
 
                     <div className="overflow-hidden mb-4">
-                        <motion.h1 initial={{ y: '110%' }} animate={{ y: 0 }} transition={{ duration: 1.2, ease, delay: 0.2 }} className="text-hero font-editorial text-soil leading-[0.9] tracking-tight">
+                        <motion.h1 initial={{ y: '110%' }} animate={{ y: 0 }} transition={{ duration: 1.2, ease, delay: 0.2 }} className="text-hero font-editorial text-soil leading-[0.9] tracking-tight whitespace-nowrap">
                             Every harvest
                         </motion.h1>
                     </div>
                     <div className="overflow-hidden mb-8">
-                        <motion.h1 initial={{ y: '110%' }} animate={{ y: 0 }} transition={{ duration: 1.2, ease, delay: 0.4 }} className="text-hero font-editorial italic text-sentinel-500 leading-[0.9] tracking-tight">
+                        <motion.h1 initial={{ y: '110%' }} animate={{ y: 0 }} transition={{ duration: 1.2, ease, delay: 0.4 }} className="text-hero font-editorial italic text-sentinel-500 leading-[0.9] tracking-tight whitespace-nowrap">
                             deserves proof.
                         </motion.h1>
                     </div>

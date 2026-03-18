@@ -34,7 +34,7 @@ export default {
         mono: ['"JetBrains Mono"', 'monospace'],
       },
       fontSize: {
-        hero: 'clamp(4rem, 12vw, 14rem)',
+        hero: 'clamp(3rem, 8vw, 7.5rem)',
         display: 'clamp(3rem, 8vw, 8rem)',
         section: 'clamp(2rem, 5vw, 5rem)',
       },

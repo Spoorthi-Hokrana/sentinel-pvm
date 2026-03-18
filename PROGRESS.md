@@ -209,7 +209,35 @@ Functions implemented:
 - `AppLayout` & `TopBar` — Unified application shell providing deep-linking context, strict visual hierarchy, and reliable back-navigation outside the marketing pages
 - `useReveal` — Custom IntersectionObserver hook that triggers CSS-driven scroll animations (fade-up, line scale, text slide)
 
-## Phase 6: Demo Recording ⬜ (not started)
+## Phase 7: Backend Bridge & Agent Integration ✅
+
+### Task 7.1 — Node.js Express Server ✅
+- **File:** `backend/server.js`
+- Spawns `agent.py` as a child process with `PYTHONUNBUFFERED=1`.
+- Streams real-time logs via Server-Sent Events (SSE).
+- Handles ANSI escape code stripping for clean frontend display.
+- Integrated health check and concurrency guards.
+
+### Task 7.2 — Frontend API & Hooks ✅
+- **Files:** `frontend/src/config/api.js`, `frontend/src/hooks/useAgent.js`
+- Standardized fetch utilities for backend interaction.
+- Reactive `useAgent` hook for managing run state, logs, and results.
+- Automatic polling and cleanup logic.
+
+### Task 7.3 — Run Agent UI Panel ✅
+- **File:** `frontend/src/components/RunAgentPanel.jsx`
+- Editorial-style control panel injected into the Dashboard.
+- Real-time terminal output with auto-scroll and status indicators.
+- One-click trigger for the verification agent.
+
+## Phase 8: Final Polish ✅
+
+### Task 8.1 — Hero Typography & Responsiveness ✅
+- Fixed wrapping issue for "Every harvest" on the Landing Page using `whitespace-nowrap`.
+- Fine-tuned `hero` font size in `tailwind.config.js` for better fit across screen sizes.
+- Verified visual alignment and editorial spacing.
+
+## Phase 9: Demo Recording ⬜ (not started)
 
 ---
 
@@ -257,8 +285,11 @@ sentinel-pvm/
 │           ├── index.css
 │           ├── config/  (chain.js, contracts.js, thirdweb.js)
 │           ├── hooks/   (useSentinel.js, useEvents.js, useReveal.js)
-│           ├── components/ (Navbar, Sidebar, TopBar, MobileTabBar, AppLayout)
+│           ├── components/ (Navbar, Sidebar, TopBar, MobileTabBar, AppLayout, RunAgentPanel)
 │           └── pages/   (Landing, Dashboard, Benchmark, Stats, Verify)
+├── backend/
+│   ├── package.json
+│   └── server.js
 ├── pvm-engine/
 │   ├── .cargo/config.toml
 │   ├── Cargo.toml
