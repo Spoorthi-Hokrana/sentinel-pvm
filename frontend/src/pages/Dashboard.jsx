@@ -1,6 +1,6 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Activity, Grid3x3, Radio } from "lucide-react";
+import { Activity, Grid3x3, Radio, PlayCircle, Loader2 } from "lucide-react";
 import { useEvents } from "../hooks/useEvents";
 import BatchCard from "../components/BatchCard";
 import TerminalLog from "../components/TerminalLog";
@@ -51,13 +51,13 @@ function FarmGrid({ events }) {
   };
 
   return (
-    <div className="grid grid-cols-4 gap-2">
-      {[...ZONES, ...ZONES, ...ZONES, ...ZONES].map((zone, i) => {
+    <div className="grid grid-cols-2 gap-2">
+      {ZONES.map((zone, i) => {
         const status = zoneStatus[zone] || "none";
         return (
           <div
             key={i}
-            className={`aspect-square rounded-lg border flex flex-col items-center justify-center text-[10px] font-mono ${colorMap[status]}`}
+            className={`aspect-square rounded-lg border flex flex-col items-center justify-center text-[10px] font-mono transition-colors duration-500 ${colorMap[status]}`}
           >
             <span className="font-semibold">{zone.replace("_", " ").toUpperCase()}</span>
           </div>
@@ -69,6 +69,48 @@ function FarmGrid({ events }) {
 
 export default function Dashboard() {
   const { events, loading } = useEvents(15000);
+  const [isAgentRunning, setIsAgentRunning] = useState(false);
+  const [agentLogs, setAgentLogs] = useState([]);
+
+  const runAgent = async () => {
+    setIsAgentRunning(true);
+    setAgentLogs([{ text: "Starting Sentinel-PVM Agent...", color: "text-white/60" }]);
+    
+    try {
+      const res = await fetch('/api/run-agent', { method: 'POST' });
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        
+        const chunk = decoder.decode(value);
+        const lines = chunk.split('\n\n').filter(Boolean);
+        
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = JSON.parse(line.slice(6));
+            if (data.type === 'stdout' || data.type === 'stderr') {
+              setAgentLogs(prev => [...prev, { 
+                text: data.msg.trim(), 
+                color: data.msg.includes('✅') || data.msg.includes('green') ? 'text-sentinel-green' : 
+                       data.msg.includes('✗') || data.msg.includes('red') ? 'text-red-400' : 
+                       'text-white/80'
+              }].slice(-20));
+            } else if (data.type === 'done') {
+              setIsAgentRunning(false);
+              setAgentLogs(prev => [...prev, { text: `[Process Exited]`, color: 'text-white/40' }]);
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      setAgentLogs(prev => [...prev, { text: `Failed to connect to Local Backend API`, color: 'text-red-500' }]);
+      setIsAgentRunning(false);
+    }
+  };
 
   const terminalLines = useMemo(() => {
     return events.slice(0, 20).map((e) => ({
@@ -98,15 +140,30 @@ export default function Dashboard() {
         <div className="grid lg:grid-cols-[1fr,380px] gap-6">
           {/* Left: Feed */}
           <div>
-            <div className="flex items-center gap-3 mb-4">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sentinel-green opacity-75" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-sentinel-green" />
-              </span>
-              <h2 className="font-display font-semibold text-lg flex items-center gap-2">
-                <Activity className="w-4 h-4 text-sentinel-green" />
-                LIVE TELEMETRY FEED
-              </h2>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sentinel-green opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-sentinel-green" />
+                </span>
+                <h2 className="font-display font-semibold text-lg flex items-center gap-2">
+                  <Activity className="w-4 h-4 text-sentinel-green" />
+                  LIVE TELEMETRY FEED
+                </h2>
+              </div>
+
+              <button
+                onClick={runAgent}
+                disabled={isAgentRunning}
+                className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 active:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed border border-white/10 rounded-lg text-sm font-medium transition-all"
+              >
+                {isAgentRunning ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <PlayCircle className="w-4 h-4" />
+                )}
+                {isAgentRunning ? "Agent Running..." : "Run Python Agent"}
+              </button>
             </div>
 
             {loading ? (
@@ -115,11 +172,8 @@ export default function Dashboard() {
               <GlowCard glow="none" className="text-center py-12">
                 <Radio className="w-8 h-8 text-white/20 mx-auto mb-3" />
                 <p className="text-white/40 text-sm">
-                  No events yet. Run the Python agent to submit telemetry batches.
+                  No events yet. Click "Run Python Agent" to submit telemetry batches.
                 </p>
-                <code className="mt-3 inline-block font-mono text-xs text-sentinel-green/60 bg-white/[0.03] px-3 py-1.5 rounded-lg">
-                  python3 agent/agent.py
-                </code>
               </GlowCard>
             ) : (
               <div className="space-y-3">
@@ -158,9 +212,9 @@ export default function Dashboard() {
 
             <div>
               <h3 className="font-display font-semibold text-sm text-white/60 mb-3">
-                TRANSACTION LOG
+                {isAgentRunning || agentLogs.length > 0 ? "AGENT LOGS" : "TRANSACTION LOG"}
               </h3>
-              <TerminalLog lines={terminalLines} />
+              <TerminalLog lines={agentLogs.length > 0 ? agentLogs : terminalLines} />
             </div>
           </div>
         </div>

@@ -29,6 +29,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 from web3 import Web3
+from web3.middleware import ExtraDataToPOAMiddleware
 
 console = Console()
 
@@ -183,8 +184,8 @@ def submit_to_contract(
         {
             "from": account.address,
             "nonce": nonce,
-            "gas": int(gas * 1.3),
-            "gasPrice": w3.eth.gas_price,
+            "gas": 600000,
+            "gasPrice": w3.eth.gas_price * 2,
             "chainId": w3.eth.chain_id,
         }
     )
@@ -284,6 +285,7 @@ def main():
     # ── Connect to network ────────────────────────────────────────
     console.print("\n[bold]🔗 Connecting to Paseo Asset Hub...[/bold]")
     w3 = Web3(Web3.HTTPProvider(rpc_url, request_kwargs={"timeout": 30}))
+    w3.middleware_onion.inject(ExtraDataToPOAMiddleware, layer=0)
     if not w3.is_connected():
         console.print(f"[red]✗ Cannot connect to {rpc_url}[/red]")
         sys.exit(1)

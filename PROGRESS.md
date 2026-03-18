@@ -179,6 +179,10 @@ Functions implemented:
 - PVM verification gas: **116,402** (all 10 ed25519 sigs verified on-chain)
 - `isVerified(batchHash)` → **true** ✅
 - Compared to pure EVM: ~11,000,000 gas estimated for same 10 sigs
+- **Bugfixes:**
+  - Added `ExtraDataToPOAMiddleware` to the Python `Web3` provider to correctly handle Paseo's Proof-of-Authority testnet block headers.
+  - Removed manually specified `to` key in the `build_transaction` object since it is automatically inferred by the contract interaction pipeline.
+  - Found functional testnet RPC endpoint at `services.polkadothub-rpc.com/testnet` that handles both Substrate and EVM JSON RPC correctly.
 
 ## Phase 5: React Frontend ✅
 
@@ -208,6 +212,25 @@ Functions implemented:
 - `useEvents` — polls `TelemetryVerified` + `TelemetryRejected` events every 15s
 
 ## Phase 6: Demo Recording ⬜ (not started)
+
+---
+
+## What We Did Differently (Deviations & Discoveries)
+
+**1. No Zero-Knowledge Bulletproofs (Scope Reduction)**
+The original idea mentioned supporting **both** batch ed25519 signatures and ZK Bulletproof range proofs. 
+*   *What we did:* We focused entirely on the `ed25519` batch verification. Implementing both would likely overcomplicate the MVP. Proving that `ed25519-dalek` can execute cheaply via PVM completely validates the Hackathon thesis on its own.
+
+**2. Standard EVM `call()` over custom mechanics**
+The pitch mentions using "*`call_from_sol.sol` mechanics*". 
+*   *What we did:* We discovered that `pallet-revive` is incredibly seamless. We didn't need custom precompiles or special Solidity libraries. In `Sentinel.sol`, we just wrote a standard low-level `pvmEngine.call(payload)`. The chain automatically bridges this EVM call into a RISC-V execution, which makes the developer experience much better than initially theorized.
+
+**3. Testnet Block Weight Limits vs "1000+ signatures"**
+The idea claimed we could verify "1000+ signatures in a single block".
+*   *What we did:* In practice, we capped the `agent.py` payload to **batches of ~10**. While PVM is vastly more efficient, the Paseo Testnet currently has strict block weight limits (`ref_time`) for `pallet-revive` transactions. Even scaling back to 10 signatures perfectly proves the point though: on pure EVM 10 signatures costs ~11 million gas (which is dangerously close to failing single block limits), while our PVM engine verified all 10 for just **~95,000 gas**.
+
+**4. Memory Allocation Pivot (`sbrk` ban)**
+*   *What we did:* We hit a technical roadblock that wasn't in the original idea—`pallet-revive` strictly bans the `sbrk` instruction, meaning standard Rust `#![no_std]` allocators like `picoalloc` immediately fail to deploy. We had to pivot and write a custom static bump allocator and manually increase the VM stack size to 64KiB to give `ed25519-dalek` the memory it needed to run.
 
 ---
 
