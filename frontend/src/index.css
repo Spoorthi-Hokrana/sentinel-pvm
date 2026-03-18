@@ -2,60 +2,161 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  body {
-    @apply bg-sentinel-bg text-white antialiased;
-    font-family: "Space Grotesk", sans-serif;
+/* ═══ BASE ═══ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto;
+  /* Lenis handles smooth scroll */
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #F8FAF5;
+  color: #2C3E2D;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ═══ SELECTION ═══ */
+::selection {
+  background-color: #1DBF60;
+  color: white;
+}
+
+/* ═══ SCROLLBAR ═══ */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1DBF60;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #109A4B;
+}
+
+/* ═══ SCROLL REVEAL ANIMATIONS ═══ */
+.reveal-container {
+  overflow: hidden;
+}
+
+.text-reveal span {
+  display: inline-block;
+  transform: translateY(110%);
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.text-reveal.visible span {
+  transform: translateY(0);
+}
+
+.text-reveal span:nth-child(2) {
+  transition-delay: 0.15s;
+}
+
+.text-reveal span:nth-child(3) {
+  transition-delay: 0.3s;
+}
+
+.line-reveal {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.line-reveal.visible {
+  transform: scaleX(1);
+}
+
+.fade-up {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-up-delay-1 {
+  transition-delay: 0.15s;
+}
+
+.fade-up-delay-2 {
+  transition-delay: 0.3s;
+}
+
+.fade-up-delay-3 {
+  transition-delay: 0.45s;
+}
+
+/* ═══ LENIS ═══ */
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* ═══ CUSTOM CURSOR ═══ */
+.cursor-dot {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #1DBF60;
+  border-radius: 50%;
+  z-index: 9999;
+  transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+  mix-blend-mode: difference;
+  transform: translate(-50%, -50%);
+}
+
+.cursor-dot.hovering {
+  width: 60px;
+  height: 60px;
+  background-color: rgba(29, 191, 96, 0.15);
+  border-color: #1DBF60;
+}
+
+/* ═══ CHART TOOLTIP ═══ */
+.recharts-tooltip-wrapper {
+  outline: none !important;
+}
+
+/* ═══ NUMBER COUNT-UP ═══ */
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
 
-  ::-webkit-scrollbar {
-    width: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    @apply bg-sentinel-bg;
-  }
-  ::-webkit-scrollbar-thumb {
-    @apply bg-sentinel-border rounded-full;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@layer components {
-  .glass {
-    @apply backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl;
-  }
-
-  .glass-sm {
-    @apply backdrop-blur-md bg-white/[0.03] border border-white/[0.06] rounded-xl;
-  }
-
-  .grid-bg {
-    background-image: linear-gradient(
-        rgba(0, 255, 148, 0.03) 1px,
-        transparent 1px
-      ),
-      linear-gradient(90deg, rgba(0, 255, 148, 0.03) 1px, transparent 1px);
-    background-size: 60px 60px;
-  }
-
-  .hero-glow {
-    background: radial-gradient(
-      ellipse 800px 500px at center 30%,
-      rgba(0, 255, 148, 0.06),
-      transparent
-    );
-  }
-
-  .glow-green {
-    box-shadow: 0 0 40px rgba(0, 255, 148, 0.08),
-      0 0 80px rgba(0, 255, 148, 0.04);
-  }
-
-  .glow-pink {
-    box-shadow: 0 0 40px rgba(230, 0, 122, 0.08),
-      0 0 80px rgba(230, 0, 122, 0.04);
-  }
-
-  .text-gradient-green {
-    @apply bg-gradient-to-r from-sentinel-green to-emerald-300 bg-clip-text text-transparent;
-  }
+.count-up-enter {
+  animation: countUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

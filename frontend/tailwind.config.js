@@ -1,40 +1,55 @@
-import forms from "@tailwindcss/forms";
-
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
       colors: {
+        cream: '#F8FAF5',
+        ivory: '#F0F4EB',
+        sage: '#DCE4D4',
+        bark: '#2C3E2D',
+        moss: '#5A6B5C',
+        soil: '#1A2B1C',
+        forest: '#0D1F10',
         sentinel: {
-          bg: "#080B14",
-          card: "#0D1117",
-          border: "#1A2332",
-          green: "#00FF94",
-          pink: "#E6007A",
-          cyan: "#00D4FF",
+          50: '#EDFCF2',
+          100: '#D4F7E0',
+          200: '#ACF0C6',
+          300: '#75E3A2',
+          400: '#3DCE79',
+          500: '#1DBF60',
+          600: '#109A4B',
+          700: '#0F7A3E',
+          800: '#116034',
+          900: '#104F2C',
+          950: '#042C17',
         },
+        warning: '#E6A817',
+        danger: '#DC4545',
+        info: '#3B82F6',
       },
       fontFamily: {
-        display: ['"Space Grotesk"', "sans-serif"],
-        mono: ['"JetBrains Mono"', "monospace"],
+        editorial: ['"DM Serif Display"', 'serif'],
+        body: ['"Inter"', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        hero: 'clamp(4rem, 12vw, 14rem)',
+        display: 'clamp(3rem, 8vw, 8rem)',
+        section: 'clamp(2rem, 5vw, 5rem)',
+      },
+      letterSpacing: {
+        tight: '-0.03em',
+      },
+      borderRadius: {
+        '2xl': '20px',
+        '3xl': '24px',
       },
       animation: {
-        "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        glow: "glow 2s ease-in-out infinite alternate",
-        "flow-right": "flowRight 2s linear infinite",
-      },
-      keyframes: {
-        glow: {
-          "0%": { opacity: "0.4" },
-          "100%": { opacity: "1" },
-        },
-        flowRight: {
-          "0%": { strokeDashoffset: "20" },
-          "100%": { strokeDashoffset: "0" },
-        },
+        'ping-slow': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
+        'bounce-slow': 'bounce 2s ease-in-out infinite',
       },
     },
   },
-  plugins: [forms],
+  plugins: [],
 };

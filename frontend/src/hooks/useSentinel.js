@@ -1,71 +1,17 @@
-import { useState, useEffect, useCallback } from "react";
-import { publicClient } from "../config/chain";
-import { SENTINEL_ADDRESS, SENTINEL_ABI } from "../config/contracts";
+import { useState, useEffect } from 'react';
 
-export function useIsVerified(batchHash) {
-  const [verified, setVerified] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!batchHash) {
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    publicClient
-      .readContract({
-        address: SENTINEL_ADDRESS,
-        abi: SENTINEL_ABI,
-        functionName: "isVerified",
-        args: [batchHash],
-      })
-      .then(setVerified)
-      .catch(() => setVerified(null))
-      .finally(() => setLoading(false));
-  }, [batchHash]);
-
-  return { verified, loading };
+// Mock data for now — replace with actual contract reads when needed
+export function useSentinel() {
+  return {
+    pvmEngine: '0xd67c20221ed1cc16416bd5be1915b2b9487fb1d0',
+    isConnected: false,
+  };
 }
 
-export function useVerifiedBatches(agentAddress) {
-  const [batches, setBatches] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const refetch = useCallback(() => {
-    if (!agentAddress) return;
-    setLoading(true);
-    publicClient
-      .readContract({
-        address: SENTINEL_ADDRESS,
-        abi: SENTINEL_ABI,
-        functionName: "getVerifiedBatches",
-        args: [agentAddress],
-      })
-      .then(setBatches)
-      .catch(() => setBatches([]))
-      .finally(() => setLoading(false));
-  }, [agentAddress]);
-
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
-
-  return { batches, loading, refetch };
+export function useIsVerified(hash) {
+  return { data: false, isLoading: false };
 }
 
-export function usePvmEngine() {
-  const [address, setAddress] = useState(null);
-
-  useEffect(() => {
-    publicClient
-      .readContract({
-        address: SENTINEL_ADDRESS,
-        abi: SENTINEL_ABI,
-        functionName: "pvmEngine",
-      })
-      .then(setAddress)
-      .catch(() => {});
-  }, []);
-
-  return address;
+export function useVerifiedBatches(address) {
+  return { data: [], isLoading: false };
 }

@@ -1,107 +1,145 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
-import { ConnectButton } from "thirdweb/react";
-import { darkTheme } from "thirdweb/react";
-import { client } from "../config/thirdweb";
-import { paseoAssetHub } from "../config/chain";
-import ChainBadge from "./ChainBadge";
+import { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const links = [
-  { to: "/dashboard", label: "Dashboard" },
-  { to: "/benchmark", label: "Benchmark" },
-  { to: "/stats", label: "Stats" },
+const navLinks = [
+  { num: '01', label: 'Home', path: '/' },
+  { num: '02', label: 'Dashboard', path: '/dashboard' },
+  { num: '03', label: 'Performance', path: '/benchmark' },
+  { num: '04', label: 'Farm Stats', path: '/stats' },
 ];
 
-function NavLink({ to, label }) {
-  const { pathname } = useLocation();
-  const active = pathname === to;
-  return (
-    <Link
-      to={to}
-      className={`text-sm font-medium transition-colors ${
-        active ? "text-sentinel-green" : "text-white/60 hover:text-white"
-      }`}
-    >
-      {label}
-    </Link>
-  );
-}
-
-const walletTheme = darkTheme({
-  colors: {
-    modalBg: "#0D1117",
-    primaryButtonBg: "#00FF94",
-    primaryButtonText: "#080B14",
-    borderColor: "#1A2332",
-  },
-});
-
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
 
   return (
-    <nav className="fixed top-0 w-full z-50 backdrop-blur-xl bg-black/40 border-b border-white/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2.5">
-          <svg viewBox="0 0 32 32" className="w-7 h-7" fill="none">
-            <path
-              d="M16 2L28 9V23L16 30L4 23V9L16 2Z"
-              stroke="#00FF94"
-              strokeWidth="2"
-              fill="#00FF94"
-              fillOpacity="0.1"
-            />
-            <path
-              d="M16 8L22 11.5V18.5L16 22L10 18.5V11.5L16 8Z"
-              fill="#00FF94"
-              fillOpacity="0.4"
-            />
-          </svg>
-          <span className="font-display font-bold text-base tracking-tight text-white">
-            SENTINEL<span className="text-sentinel-green">-PVM</span>
-          </span>
-        </Link>
+    <>
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
+            ? 'py-4 bg-white/80 backdrop-blur-xl border-b border-sage'
+            : 'py-6 bg-transparent'
+          }`}
+      >
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12 flex items-center justify-between">
+          {/* Left */}
+          <Link to="/" className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-sentinel-500" />
+            <span className="text-sm uppercase tracking-wider font-medium text-soil">
+              Sentinel
+            </span>
+          </Link>
 
-        <div className="hidden md:flex items-center gap-8">
-          {links.map((l) => (
-            <NavLink key={l.to} {...l} />
-          ))}
-        </div>
+          {/* Center */}
+          <div className="hidden md:flex items-center gap-2">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sentinel-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-sentinel-500" />
+            </span>
+            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-moss">
+              Network Active
+            </span>
+          </div>
 
-        <div className="flex items-center gap-3">
-          <ChainBadge />
-          {client && (
-            <ConnectButton
-              client={client}
-              chain={paseoAssetHub}
-              theme={walletTheme}
-              connectButton={{ label: "Connect", style: { height: "36px", fontSize: "13px" } }}
-            />
-          )}
+          {/* Right */}
           <button
-            className="md:hidden p-1.5 text-white/60 hover:text-white"
-            onClick={() => setOpen(!open)}
+            onClick={() => setMenuOpen(true)}
+            className="text-sm uppercase tracking-wider font-medium text-soil hover:text-sentinel-500 transition-colors duration-300"
           >
-            {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            Menu
           </button>
         </div>
-      </div>
+      </nav>
 
-      {open && (
-        <div className="md:hidden border-t border-white/5 bg-black/60 backdrop-blur-xl px-4 py-4 flex flex-col gap-4">
-          {links.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              className="text-sm text-white/70 hover:text-white"
-              onClick={() => setOpen(false)}
-            >
-              {l.label}
-            </Link>
-          ))}
-        </div>
-      )}
-    </nav>
+      {/* Fullscreen Menu Overlay */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            exit={{ scaleY: 0 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            style={{ transformOrigin: 'top' }}
+            className="fixed inset-0 z-[100] bg-forest flex flex-col"
+          >
+            {/* Top bar */}
+            <div className="flex items-center justify-between px-6 md:px-12 py-6">
+              <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-white/40">
+                Navigation
+              </span>
+              <button
+                onClick={() => setMenuOpen(false)}
+                className="text-sm uppercase tracking-wider font-medium text-white/60 hover:text-white transition-colors"
+              >
+                Close
+              </button>
+            </div>
+
+            {/* Center nav links */}
+            <div className="flex-1 flex flex-col justify-center px-6 md:px-16 lg:px-24">
+              {navLinks.map((link, i) => (
+                <motion.div
+                  key={link.path}
+                  initial={{ opacity: 0, x: -40 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 + i * 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  {i > 0 && <div className="h-px bg-white/10" />}
+                  <button
+                    onClick={() => {
+                      setMenuOpen(false);
+                      setTimeout(() => navigate(link.path), 300);
+                    }}
+                    className={`group flex items-baseline gap-6 py-6 md:py-8 w-full text-left transition-all duration-500 hover:translate-x-4 ${location.pathname === link.path
+                        ? 'text-sentinel-400'
+                        : 'text-white hover:text-sentinel-400'
+                      }`}
+                  >
+                    <span className="text-sm font-mono text-sentinel-500">
+                      {link.num}
+                    </span>
+                    <span className="text-5xl md:text-7xl lg:text-8xl font-editorial">
+                      {link.label}
+                    </span>
+                  </button>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Bottom */}
+            <div className="flex items-center justify-between px-6 md:px-12 py-6">
+              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/20">
+                Built on Polkadot
+              </span>
+              <a
+                href="https://github.com"
+                target="_blank"
+                rel="noreferrer"
+                className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/20 hover:text-white/50 transition-colors"
+              >
+                GitHub
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

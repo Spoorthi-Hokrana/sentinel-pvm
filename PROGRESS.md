@@ -184,32 +184,30 @@ Functions implemented:
   - Removed manually specified `to` key in the `build_transaction` object since it is automatically inferred by the contract interaction pipeline.
   - Found functional testnet RPC endpoint at `services.polkadothub-rpc.com/testnet` that handles both Substrate and EVM JSON RPC correctly.
 
-## Phase 5: React Frontend ✅
+## Phase 5: React Frontend (Utopia Tokyo Redesign) ✅
 
-### Task 5.1 — Project Setup ✅
-- Vite + React, TailwindCSS v3, ThirdWeb v5, viem, Framer Motion, Recharts, Lucide React, React Router v6
-- Custom design system: `#080B14` bg, `#00FF94` green, `#E6007A` pink, `#00D4FF` cyan
-- Fonts: Space Grotesk (display) + JetBrains Mono (data)
+### Task 5.1 — Project Setup & Design System ✅
+- Vite + React, TailwindCSS v3, Framer Motion, Lenis (Smooth Scroll), Recharts, Lucide React, React Router v6
+- Custom design system based on Utopia Tokyo: Massive typography, extreme whitespace, asymmetric editorial layouts
+- Palette: Warm Cream (`#F8FAF5`), Deep Forest (`#0D1F10`), and Vibrant Green (`#1DBF60`)
+- Fonts: DM Serif Display (hero text), Inter (body), JetBrains Mono (micro labels)
 
 ### Task 5.2 — Pages ✅
 | Page | Description |
 |---|---|
-| Landing | Hero with grid bg, animated architecture diagram, "How It Works" 4-step flow |
-| Dashboard | Live telemetry feed from on-chain events, 4×4 farm zone grid, terminal log |
-| Benchmark | Side-by-side EVM vs PVM with typewriter terminals, Recharts bar chart, "Try It" buttons |
-| Stats | KPI cards (batches, sigs, gas saved, agents), line chart, tx table — all live from chain |
+| Landing | Magazine-style scroll experience, full-viewport Hero with parallax, Editorial text reveals, Count-up stats |
+| Dashboard | Sidebar layout with farmer-friendly KPI cards, Active Field grid status, real-time Live Feed, Area Chart |
+| Benchmark | Editoral comparison spread: Traditional Verification vs Sentinel (92% vs 3% visual speed bars) |
+| Stats | Complete 12-month verification trend chart, active certifiers, and detailed recent activity table |
+| Verify | Placeholder for certificates and verification records |
 
-### Task 5.3 — Components ✅
-- `Navbar` — floating glassmorphism, ThirdWeb ConnectButton, ChainBadge, mobile hamburger
-- `GlowCard` — reusable glassmorphism card with hover glow effects
-- `StatBadge` — animated count-up numbers on scroll
-- `BatchCard` — expandable batch display with verification status
-- `TerminalLog` — auto-scrolling green-on-black terminal
-- `ChainBadge` — pulsing "PASEO LIVE" indicator
-
-### Task 5.4 — Hooks ✅
-- `useSentinel` — `useIsVerified()`, `useVerifiedBatches()`, `usePvmEngine()` via viem
-- `useEvents` — polls `TelemetryVerified` + `TelemetryRejected` events every 15s
+### Task 5.3 — Components & Hooks ✅
+- `SmoothScroll` — `@studio-freight/lenis` wrapper for buttery smooth luxury scrolling
+- `CustomCursor` — Lerp-tracking cursor that expands on interaction and morphs into a line over text
+- `Navbar` — Minimalist logo, scroll-aware transparency, with full-screen staggered menu overlay 
+- `Sidebar` — Editorial navigation with active states, integrated mobile tab bar, and clear escape hatch
+- `AppLayout` & `TopBar` — Unified application shell providing deep-linking context, strict visual hierarchy, and reliable back-navigation outside the marketing pages
+- `useReveal` — Custom IntersectionObserver hook that triggers CSS-driven scroll animations (fade-up, line scale, text slide)
 
 ## Phase 6: Demo Recording ⬜ (not started)
 
@@ -253,14 +251,14 @@ sentinel-pvm/
 │   ├── tailwind.config.js
 │   ├── vite.config.js
 │   ├── public/favicon.svg
-│   └── src/
-│       ├── main.jsx
-│       ├── App.jsx
-│       ├── index.css
-│       ├── config/  (chain.js, contracts.js, thirdweb.js)
-│       ├── hooks/   (useSentinel.js, useEvents.js)
-│       ├── components/ (Navbar, GlowCard, StatBadge, BatchCard, TerminalLog, ChainBadge)
-│       └── pages/   (Landing, Dashboard, Benchmark, Stats)
+│       └── src/
+│           ├── main.jsx
+│           ├── App.jsx
+│           ├── index.css
+│           ├── config/  (chain.js, contracts.js, thirdweb.js)
+│           ├── hooks/   (useSentinel.js, useEvents.js, useReveal.js)
+│           ├── components/ (Navbar, Sidebar, TopBar, MobileTabBar, AppLayout)
+│           └── pages/   (Landing, Dashboard, Benchmark, Stats, Verify)
 ├── pvm-engine/
 │   ├── .cargo/config.toml
 │   ├── Cargo.toml
