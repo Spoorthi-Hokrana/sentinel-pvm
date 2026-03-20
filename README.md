@@ -14,6 +14,12 @@
 
 ---
 
+## 📺 Demo Video
+
+[![Sentinel-PVM Demo](https://img.youtube.com/vi/Zh6clrE_zTQ/maxresdefault.jpg)](https://youtu.be/Zh6clrE_zTQ)
+
+> Watch the full demo: Ed25519 batch verification via PVM — 99.1% gas reduction on Polkadot Asset Hub.
+
 ## The Problem
 
 Self-hosted AI farming agents and IoT drone swarms generate thousands of signed telemetry data points like soil moisture, pH levels, temperature readings, autonomous irrigation decisions. Every one of these data points needs to be cryptographically verified before it can be trusted by downstream consumers (buyers, insurance, supply chain auditors).
