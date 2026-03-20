@@ -16,7 +16,7 @@
 
 ## 📺 Demo Video
 
-[![Sentinel-PVM Demo](https://img.youtube.com/vi/Zh6clrE_zTQ/maxresdefault.jpg)](https://youtu.be/Zh6clrE_zTQ)
+[![Sentinel-PVM Demo](https://img.youtube.com/vi/1Zgrl3CDUNQ/maxresdefault.jpg)](https://youtu.be/1Zgrl3CDUNQ)
 
 > Watch the full demo: Ed25519 batch verification via PVM — 99.1% gas reduction on Polkadot Asset Hub.
 
